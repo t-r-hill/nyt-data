@@ -5,10 +5,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
 @NoArgsConstructor
-public class Thumbnail {
+public class Thumbnail implements Serializable {
 
     @JsonProperty("url")
     private String url;

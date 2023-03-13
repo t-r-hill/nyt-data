@@ -4,8 +4,10 @@ import co.LabsProjects.nytdata.model.Article;
 import co.LabsProjects.nytdata.model.Doc;
 import co.LabsProjects.nytdata.model.MostViewedResponse;
 import co.LabsProjects.nytdata.model.SearchResponse;
+import org.ehcache.CacheManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -31,6 +33,7 @@ public class ArticleService {
     @Autowired
     RestTemplate restTemplate;
 
+
     public List<Article> getMostPopular(){
         MostViewedResponse response = restTemplate.getForObject(mostPopularUrl + "api-key=" + apiKey, MostViewedResponse.class);
         List<Article> results = new ArrayList<>();
@@ -43,6 +46,7 @@ public class ArticleService {
         return results;
     }
 
+    @Cacheable(value = "docs", key = "#searchTerm")
     public List<Doc> getSearchResults(String searchTerm){
         ResponseEntity<SearchResponse> searchResponse = restTemplate.getForEntity(searchUrl + searchTerm + "&api-key=" + apiKey, SearchResponse.class);
         List<Doc> results = new ArrayList<>();
